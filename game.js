@@ -17,11 +17,20 @@ let wallOffset = (oneBlockSize - wallSpaceWidth) / 2;
 let wallInnerColor = "black";
 let foodColor = "#FEB897";
 let score = 0;
+let ghosts = [];
+let ghostCount = 4;
 
 const DIRECTION_RIGHT = 4;
 const DIRECTION_UP = 3;
 const DIRECTION_LEFT = 2;
 const DIRECTION_BOTTOM = 1;
+
+let ghostLocations = [
+    {x:0, y:0},
+    {x:176, y:0},
+    {x:0, y:121},
+    {x:176, y:121},
+];
 
 let map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -75,14 +84,32 @@ let drawFoods = () => {
     }
 }
 
+let drawScore = () => {
+    canvasContext.font = "20px Emulogic";
+    canvasContext.fillStyle = "white";
+    canvasContext.fillText(
+        "Score: " + score,
+        0,
+        oneBlockSize * (map.length + 1) + 10
+    );
+}
+
+let drawGhosts = () => {
+    for (let i = 0; i < ghosts.length; i++) {
+        ghosts[i].draw();
+    }
+}
+
 let draw = () => {
     createReact(0,0, canvas.width, canvas.height, "black");
     drawWalls();
     drawFoods();
     pacman.draw();
+    drawScore();
+    drawGhosts();
 }
 
-let gameInternal = setInterval(gameLoop, 1000 / fps);
+let gameInterval = setInterval(gameLoop, 1000 / fps);
 
 let drawWalls = () => {
     for (let i = 0; i < map.length; i++) {
@@ -151,7 +178,27 @@ let createNewPacman = () => {
     );
 }
 
+let createGhosts = () => {
+    ghosts = [];
+    for (let i = 0; i < ghostCount; i++) {
+        let newGhost = new Ghost(
+            9 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize,
+            10 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize,
+            oneBlockSize,
+            oneBlockSize,
+            pacman.speed / 2,
+            ghostLocations[i % 4].x,
+            ghostLocations[i % 4].y,
+            124,
+            116,
+            6 + i
+        );
+        ghosts.push(newGhost);
+    }
+}
+
 createNewPacman();
+createGhosts();
 gameLoop();
 
 window.addEventListener("keydown", (event) => {
@@ -159,16 +206,16 @@ window.addEventListener("keydown", (event) => {
 
     setInterval(() => {
         if (key == 37 || key == 65) {
-            //left
+            // left arrow or a
             pacman.nextDirection = DIRECTION_LEFT;
         } else if (key == 38 || key == 87) {
-            //up
+            // up arrow or w
             pacman.nextDirection = DIRECTION_UP;
         } else if (key == 39 || key == 68) {
-            //right
+            // right arrow or d
             pacman.nextDirection = DIRECTION_RIGHT;
-        } else if (key == 40 || key == 69) {
-            //down
+        } else if (key == 40 || key == 83) {
+            // bottom arrow or s
             pacman.nextDirection = DIRECTION_BOTTOM;
         }
 

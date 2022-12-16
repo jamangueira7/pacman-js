@@ -18,7 +18,7 @@ class Pacman {
     moveProcess() {
         this.changeDirectionIfPossible();
         this.moveForwards();
-        if(this.checkCollision()) {
+        if(this.checkCollisions()) {
             this.moveBackwards();
         }
     }
@@ -74,7 +74,7 @@ class Pacman {
         }
     }
 
-    checkCollision() {
+    checkCollisions() {
         let isCollided = false;
         if(
             map[this.getMapY()][this.getMapX()] == 1 ||
@@ -100,7 +100,7 @@ class Pacman {
         this.direction = this.nextDirection;
         this.moveForwards();
 
-        if (this.checkCollision()) {
+        if (this.checkCollisions()) {
             this.moveBackwards();
             this.direction = tempDirection;
         } else {
