@@ -6,6 +6,7 @@ class Pacman {
         this.height = height;
         this.speed = speed;
         this.direction = DIRECTION_RIGHT;
+        this.nextDirection = this.direction;
         this.currentFrame = 1;
         this.frameCount = 7;
 
@@ -23,7 +24,14 @@ class Pacman {
     }
 
     eat() {
-
+        for (let i = 0; i < map.length; i++) {
+            for (let j = 0; j < map[0].length; j++) {
+                if (map[i][j] == 2 && this.getMapX() == j && this.getMapY() == i) {
+                    map[i][j] = 3;
+                    score++;
+                }
+            }
+        }
     }
 
     moveBackwards() {
@@ -74,9 +82,9 @@ class Pacman {
             map[this.getMapY()][this.getMapXRightSide()] == 1 ||
             map[this.getMapYRightSide()][this.getMapXRightSide()] == 1
         ) {
-            return true;
+            isCollided =  true;
         }
-        return false;
+        return isCollided;
     }
 
     checkGhostCollision() {
@@ -84,7 +92,20 @@ class Pacman {
     }
 
     changeDirectionIfPossible() {
+        if (this.direction == this.nextDirection) {
+            return;
+        }
 
+        let tempDirection = this.direction;
+        this.direction = this.nextDirection;
+        this.moveForwards();
+
+        if (this.checkCollision()) {
+            this.moveBackwards();
+            this.direction = tempDirection;
+        } else {
+            this.moveBackwards();
+        }
     }
 
     changeAnimation() {
@@ -97,7 +118,7 @@ class Pacman {
             this.x + oneBlockSize / 2,
             this.y + oneBlockSize / 2,
         );
-        canvasContext.rotate((this.direction * 90 * Math.PI) / 108);
+        canvasContext.rotate((this.direction * 90 * Math.PI) / 180);
 
         canvasContext.translate(
             -this.x - oneBlockSize / 2,
@@ -106,7 +127,7 @@ class Pacman {
 
         canvasContext.drawImage(
             pacmanFrames,
-            (this.currentFrame - 1) / oneBlockSize,
+            (this.currentFrame - 1) * oneBlockSize,
             0,
             oneBlockSize,
             oneBlockSize,

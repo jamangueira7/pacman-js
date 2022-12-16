@@ -15,6 +15,8 @@ let wallColor = "#342DCA";
 let wallSpaceWidth = oneBlockSize / 1.5;
 let wallOffset = (oneBlockSize - wallSpaceWidth) / 2;
 let wallInnerColor = "black";
+let foodColor = "#FEB897";
+let score = 0;
 
 const DIRECTION_RIGHT = 4;
 const DIRECTION_UP = 3;
@@ -54,12 +56,29 @@ let gameLoop = () => {
 
 let update = () => {
     pacman.moveProcess();
+    pacman.eat();
+}
+
+let drawFoods = () => {
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[0].length; j++) {
+            if (map[i][j] == 2) {
+                createReact(
+                    j * oneBlockSize + oneBlockSize / 3,
+                    i * oneBlockSize + oneBlockSize / 3,
+                    oneBlockSize / 3,
+                    oneBlockSize / 3,
+                    foodColor,
+                );
+            }
+        }
+    }
 }
 
 let draw = () => {
     createReact(0,0, canvas.width, canvas.height, "black");
     drawWalls();
-
+    drawFoods();
     pacman.draw();
 }
 
@@ -134,3 +153,24 @@ let createNewPacman = () => {
 
 createNewPacman();
 gameLoop();
+
+window.addEventListener("keydown", (event) => {
+    let key = event.keyCode;
+
+    setInterval(() => {
+        if (key == 37 || key == 65) {
+            //left
+            pacman.nextDirection = DIRECTION_LEFT;
+        } else if (key == 38 || key == 87) {
+            //up
+            pacman.nextDirection = DIRECTION_UP;
+        } else if (key == 39 || key == 68) {
+            //right
+            pacman.nextDirection = DIRECTION_RIGHT;
+        } else if (key == 40 || key == 69) {
+            //down
+            pacman.nextDirection = DIRECTION_BOTTOM;
+        }
+
+    }, 1);
+});
