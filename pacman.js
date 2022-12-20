@@ -171,12 +171,4 @@ class Pacman {
     getMapY() {
         return parseInt(this.y / oneBlockSize);
     }
-
-    getMapXRightSide() {
-        return parseInt((this.x * 0.99 + oneBlockSize) / oneBlockSize);
-    }
-
-    getMapYRightSide() {
-        return parseInt((this.y * 0.99 + oneBlockSize) / oneBlockSize);
-    }
 }

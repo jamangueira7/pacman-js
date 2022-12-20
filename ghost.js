@@ -27,7 +27,7 @@ class Ghost {
 
         setInterval(() => {
             this.changeRandomDirection();
-        }, 10000)
+        }, 10000);
     }
 
     isInRange() {
@@ -50,9 +50,9 @@ class Ghost {
 
     moveProcess() {
         if (this.isInRange()) {
-            this.target = pacman
+            this.target = pacman;
         } else {
-            this.target = randomTargetsForGhosts[this.randomTargetIndex]
+            this.target = randomTargetsForGhosts[this.randomTargetIndex];
         }
         this.changeDirectionIfPossible();
         this.moveForwards();

@@ -1,5 +1,3 @@
-//START
-
 const canvas = document.getElementById("canvas");
 const canvasContext = canvas.getContext("2d");
 const pacmanFrames = document.getElementById("animation");
@@ -32,7 +30,7 @@ let ghosts = [];
 let wallSpaceWidth = oneBlockSize / 1.6;
 let wallOffset = (oneBlockSize - wallSpaceWidth) / 2;
 let wallInnerColor = "black";
-let foodCount = 15;
+let foodCount = 100;
 
 let map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -84,7 +82,6 @@ let createNewPacman = () => {
 let gameLoop = () => {
     update();
     draw();
-    console.log('fddfad')
 };
 
 let gameInterval = setInterval(gameLoop, 1000 / fps);
@@ -107,7 +104,7 @@ let drawWin = () => {
         location.reload();
 
     }, 4000);
-}
+};
 
 let drawGameOver = () => {
     clearInterval(gameInterval);
@@ -122,12 +119,12 @@ let drawGameOver = () => {
         location.reload();
 
     }, 4000);
-}
+};
 
 let gameOver = () => {
     drawGameOver();
     clearInterval(gameInterval);
-}
+};
 
 let onGhostCollision = () => {
     lives--;
