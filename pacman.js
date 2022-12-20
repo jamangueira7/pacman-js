@@ -5,8 +5,8 @@ class Pacman {
         this.width = width;
         this.height = height;
         this.speed = speed;
-        this.direction = DIRECTION_RIGHT;
-        this.nextDirection = this.direction;
+        this.direction = 4;
+        this.nextDirection = 4;
         this.currentFrame = 1;
         this.frameCount = 7;
 
@@ -20,6 +20,7 @@ class Pacman {
         this.moveForwards();
         if(this.checkCollisions()) {
             this.moveBackwards();
+            return;
         }
     }
 
@@ -95,9 +96,7 @@ class Pacman {
                 ghost.getMapY() == this.getMapY()
             ) {
                     return true;
-
             }
-
             return false;
         }
     }
@@ -160,10 +159,10 @@ class Pacman {
     }
 
     getMapXRightSide() {
-        return parseInt((this.x + 0.9999 * oneBlockSize) / oneBlockSize);
+        return parseInt((this.x * 0.99 + oneBlockSize) / oneBlockSize);
     }
 
     getMapYRightSide() {
-        return parseInt((this.y + 0.9999 * oneBlockSize) / oneBlockSize);
+        return parseInt((this.y * 0.99 + oneBlockSize) / oneBlockSize);
     }
 }

@@ -30,7 +30,7 @@ class Ghost {
     }
 
     changeRandomDirection() {
-        this.randomTargetIndex += 1;
+        this.randomTargetIndex += parseInt(Math.random() * 4);
         this.randomTargetIndex = this.randomTargetIndex % 4;
     }
 
@@ -89,11 +89,19 @@ class Ghost {
 
     checkCollisions() {
         let isCollided = false;
-        if(
-            map[this.getMapY()][this.getMapX()] == 1 ||
-            map[this.getMapYRightSide()][this.getMapX()] == 1 ||
-            map[this.getMapY()][this.getMapXRightSide()] == 1 ||
-            map[this.getMapYRightSide()][this.getMapXRightSide()] == 1
+        if (
+            map[parseInt(this.y / oneBlockSize)][
+                parseInt(this.x / oneBlockSize)
+                ] == 1 ||
+            map[parseInt(this.y / oneBlockSize + 0.9999)][
+                parseInt(this.x / oneBlockSize)
+                ] == 1 ||
+            map[parseInt(this.y / oneBlockSize)][
+                parseInt(this.x / oneBlockSize + 0.9999)
+                ] == 1 ||
+            map[parseInt(this.y / oneBlockSize + 0.9999)][
+                parseInt(this.x / oneBlockSize + 0.9999)
+                ] == 1
         ) {
             isCollided =  true;
         }
@@ -123,6 +131,19 @@ class Ghost {
             return;
         }
 
+        if (
+            this.getMapY() != this.getMapYRightSide() &&
+            (this.direction == DIRECTION_LEFT || this.direction == DIRECTION_RIGHT)
+        ) {
+            this.direction = DIRECTION_UP;
+        }
+        if (
+            this.getMapX() != this.getMapXRightSide() &&
+            this.direction == DIRECTION_UP
+        ) {
+            this.direction = DIRECTION_LEFT;
+        }
+
         this.moveForwards();
 
         if (this.checkCollisions()) {
@@ -143,9 +164,9 @@ class Ghost {
         let queue = [{
             x: this.getMapX(),
             y: this.getMapY(),
-            moves: [
-
-            ],
+            rightX: this.getMapXRightSide(),
+            rightY: this.getMapYRightSide(),
+            moves: [],
         }];
 
         while (queue.length > 0) {
@@ -156,11 +177,11 @@ class Ghost {
                 mp[poped.y][poped.x] = 1;
                 let neighborList = this.addNeighbors(poped, mp);
                 for (let i = 0; i < neighborList.length; i++) {
-                    queue.push(neighborList[i])
+                    queue.push(neighborList[i]);
                 }
             }
         }
-        return DIRECTION_UP;
+        return 1;
     }
 
     addNeighbors(poped, mp) {
@@ -175,7 +196,11 @@ class Ghost {
         ) {
             let tempMoves = poped.moves.slice();
             tempMoves.push(DIRECTION_LEFT);
-            queue.push({ x: poped.x - 1, y: poped.y, moves: tempMoves })
+            queue.push({
+                x: poped.x - 1,
+                y: poped.y,
+                moves: tempMoves
+            });
         }
 
         if (
@@ -185,34 +210,42 @@ class Ghost {
         ) {
             let tempMoves = poped.moves.slice();
             tempMoves.push(DIRECTION_RIGHT);
-            queue.push({ x: poped.x + 1, y: poped.y, moves: tempMoves })
+            queue.push({
+                x: poped.x + 1,
+                y: poped.y,
+                moves: tempMoves
+            });
         }
 
         if (
             poped.x - 1 >= 0 &&
-            poped.x - 1 < numOfRows &&
+            poped.x - 1 < numOfColumns &&
             mp[poped.y - 1][poped.x] != 1
         ) {
             let tempMoves = poped.moves.slice();
             tempMoves.push(DIRECTION_UP);
-            queue.push({ x: poped.x, y: poped.y - 1, moves: tempMoves })
+            queue.push({
+                x: poped.x,
+                y: poped.y - 1,
+                moves: tempMoves
+            });
         }
 
         if (
             poped.x + 1 >= 0 &&
-            poped.x + 1 < numOfRows &&
+            poped.x + 1 < numOfColumns &&
             mp[poped.y + 1][poped.x] != 1
         ) {
             let tempMoves = poped.moves.slice();
             tempMoves.push(DIRECTION_BOTTOM);
-            queue.push({ x: poped.x, y: poped.y + 1, moves: tempMoves })
+            queue.push({
+                x: poped.x,
+                y: poped.y + 1,
+                moves: tempMoves
+            });
         }
 
         return queue;
-    }
-
-    changeAnimation() {
-        this.currentFrame = this.currentFrame == this.frameCount ? 1 : this.currentFrame + 1;
     }
 
     draw() {
@@ -231,6 +264,16 @@ class Ghost {
         );
 
         canvasContext.restore();
+        canvasContext.beginPath();
+        canvasContext.strokeStyle = "red";
+        canvasContext.arc(
+            this.x + oneBlockSize / 2,
+            this.y + oneBlockSize / 2,
+            this.range * oneBlockSize,
+            0,
+            2 * Math.PI
+        );
+        canvasContext.stroke();
     }
 
     getMapX() {
@@ -242,10 +285,10 @@ class Ghost {
     }
 
     getMapXRightSide() {
-        return parseInt((this.x + 0.9999 * oneBlockSize) / oneBlockSize);
+        return parseInt((this.x * 0.99 + oneBlockSize) / oneBlockSize);
     }
 
     getMapYRightSide() {
-        return parseInt((this.y + 0.9999 * oneBlockSize) / oneBlockSize);
+        return parseInt((this.y * 0.99 + oneBlockSize) / oneBlockSize);
     }
 }

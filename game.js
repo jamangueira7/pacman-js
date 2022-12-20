@@ -10,28 +10,29 @@ let createReact = (x, y, width, height, color) => {
 }
 
 let fps = 30;
+let pacman;
 let oneBlockSize = 20;
+let score = 0;
+let ghosts = [];
 let wallColor = "#342DCA";
-let wallSpaceWidth = oneBlockSize / 1.5;
+let wallSpaceWidth = oneBlockSize / 1.6;
 let wallOffset = (oneBlockSize - wallSpaceWidth) / 2;
 let wallInnerColor = "black";
 let foodColor = "#FEB897";
-let score = 0;
-let ghosts = [];
-let ghostCount = 4;
-let lives = 3;
-let foodCount = 3;
+let foodCount = 100;
 
 const DIRECTION_RIGHT = 4;
 const DIRECTION_UP = 3;
 const DIRECTION_LEFT = 2;
 const DIRECTION_BOTTOM = 1;
 
+let ghostCount = 4;
+let lives = 3;
 let ghostLocations = [
-    { x:0, y:0 },
-    { x:176, y:0 },
-    { x:0, y:121 },
-    { x:176, y:121 },
+    { x: 0, y: 0 },
+    { x: 176, y: 0 },
+    { x: 0, y: 121 },
+    { x :176, y: 121 },
 ];
 
 let map = [
@@ -45,7 +46,7 @@ let map = [
     [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
     [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
-    [2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2],
+    [1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
     [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
@@ -272,7 +273,6 @@ gameLoop();
 
 window.addEventListener("keydown", (event) => {
     let key = event.keyCode;
-
     setInterval(() => {
         if (key == 37 || key == 65) {
             // left arrow or a
