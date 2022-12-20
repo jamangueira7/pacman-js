@@ -8,15 +8,15 @@
 <br>
 
 <p align="center">
-  <img alt="app" src=".github/beginning.png" width="650px" height="450px">
+  <img alt="app" src=".github/beginning.png" width="500px" height="500px">
 </p>
 
 <p align="center">
-  <img alt="app" src=".github/winner.png" width="650px" height="450px">
+  <img alt="app" src=".github/winner.png" width="500px" height="500px">
 </p>
 
 <p align="center">
-  <img alt="app" src=".github/game_over.png" width="650px" height="450px">
+  <img alt="app" src=".github/game_over.png" width="500px" height="500px">
 </p>
 
 ## Pacman JS
