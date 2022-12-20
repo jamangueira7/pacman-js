@@ -22,28 +22,43 @@ class Ghost {
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
         this.range = range;
-        this.randomTargetIndex = parseInt(Math.random() * randomTragetForGhosts.length);
+        this.randomTargetIndex = parseInt(Math.random() * randomTargetsForGhosts.length);
+        this.target = randomTargetsForGhosts[this.randomTargetIndex];
 
         setInterval(() => {
             this.changeRandomDirection();
         }, 10000)
     }
 
+    isInRange() {
+        let xDistance = Math.abs(pacman.getMapX() - this.getMapX());
+        let yDistance = Math.abs(pacman.getMapY() - this.getMapY());
+        if (
+            Math.sqrt(xDistance * xDistance + yDistance * yDistance) <=
+            this.range
+        ) {
+            return true;
+        }
+        return false;
+    }
+
     changeRandomDirection() {
-        this.randomTargetIndex += parseInt(Math.random() * 4);
+        let addition = 1;
+        this.randomTargetIndex += addition;
         this.randomTargetIndex = this.randomTargetIndex % 4;
     }
 
     moveProcess() {
-        if (this.isInRangeOfPacman()) {
+        if (this.isInRange()) {
             this.target = pacman
         } else {
-            this.target = randomTragetForGhosts[this.randomTargetIndex]
+            this.target = randomTargetsForGhosts[this.randomTargetIndex]
         }
         this.changeDirectionIfPossible();
         this.moveForwards();
         if(this.checkCollisions()) {
             this.moveBackwards();
+            return;
         }
     }
 
@@ -106,16 +121,6 @@ class Ghost {
             isCollided =  true;
         }
         return isCollided;
-    }
-
-    isInRangeOfPacman() {
-        let xDistance = Math.abs(pacman.getMapX() - this.getMapX());
-        let yDistance = Math.abs(pacman.getMapY() - this.getMapY());
-        if (Math.sqrt(xDistance * xDistance + yDistance * yDistance) <= this.range) {
-            return true;
-        }
-
-        return false;
     }
 
     changeDirectionIfPossible() {
@@ -292,3 +297,15 @@ class Ghost {
         return parseInt((this.y * 0.99 + oneBlockSize) / oneBlockSize);
     }
 }
+
+let updateGhosts = () => {
+    for (let i = 0; i < ghosts.length; i++) {
+        ghosts[i].moveProcess();
+    }
+};
+
+let drawGhosts = () => {
+    for (let i = 0; i < ghosts.length; i++) {
+        ghosts[i].draw();
+    }
+};
